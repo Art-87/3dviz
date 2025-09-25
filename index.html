@@ -1,19 +1,59 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>3D визуализация — Портфолио и услуги</title>
-  <meta name="description" content="3D визуализация интерьеров и экстерьеров, предметное 3D‑моделирование. Фотореалистичные рендеры для архитектуры, рекламы и e‑commerce.">
+  <title>Art‑87 — 3D визуализация интерьеров и экстерьеров</title>
+  <meta name="description" content="3D визуализация интерьеров и экстерьеров, предметное 3D‑моделирование и фотореалистичные рендеры для архитектуры, рекламы и e‑commerce.">
+  <link rel="canonical" href="https://art-87.github.io/3dviz/" />
+  <meta name="theme-color" content="#0b1020" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Art‑87 — 3D визуализация интерьеров и экстерьеров">
+  <meta property="og:description" content="Интерьеры, экстерьеры, предметка. Фотореалистичные рендеры и 3D‑модели.">
+  <meta property="og:url" content="https://art-87.github.io/3dviz/">
+  <!-- ЗАМЕНИ: поставь свою обложку 1200x630 -->
+  <meta property="og:image" content="https://art-87.github.io/3dviz/img/cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Art‑87 — 3D визуализация">
+  <meta name="twitter:description" content="Интерьеры, экстерьеры, предметка. Фотореализм.">
+  <meta name="twitter:image" content="https://art-87.github.io/3dviz/img/cover.jpg">
+
+  <!-- Favicon (положи файлы в корень репозитория) -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"Art‑87",
+    "jobTitle":"3D Artist",
+    "url":"https://art-87.github.io/3dviz/",
+    "sameAs":[ "https://t.me/Arthakim" ],
+    "knowsAbout":[ "3D visualization","architectural visualization","product rendering" ]
+  }
+  </script>
+
   <style>
     :root{
       --bg:#0b1020; --surface:rgba(255,255,255,.04); --card:rgba(255,255,255,.06);
       --text:#e5e7eb; --muted:#9ca3af; --border:rgba(255,255,255,.12);
       --accent1:#8b5cf6; --accent2:#06b6d4;
     }
+    /* Светлая тема */
+    [data-theme="light"]{
+      --bg:#f8fafc; --surface:rgba(0,0,0,.03); --card:#ffffff;
+      --text:#0f172a; --muted:#475569; --border:rgba(2,6,23,.12);
+    }
+
     *{box-sizing:border-box}
     html,body{margin:0}
     body{
@@ -29,27 +69,39 @@
     /* Nav */
     header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(130%) blur(10px);
       background:rgba(11,16,32,.55); border-bottom:1px solid var(--border)}
+    [data-theme="light"] header{background:rgba(255,255,255,.7)}
     nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
     .logo{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.3px}
     .logo-badge{width:28px; height:28px; border-radius:8px;
       background:linear-gradient(135deg,var(--accent1),var(--accent2))}
+    .controls{display:flex; align-items:center; gap:12px}
     .nav-links{display:flex; gap:18px; font-weight:600; color:#cbd5e1}
+    [data-theme="light"] .nav-links{color:#334155}
     .nav-links a{opacity:.9} .nav-links a:hover{opacity:1}
+    .btn-mini{display:inline-flex; align-items:center; gap:6px; padding:8px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:700; cursor:pointer}
+    .btn-mini .sun{display:none} /* по умолчанию тёмная тема */
+    [data-theme="light"] .btn-mini .sun{display:inline}
+    [data-theme="light"] .btn-mini .moon{display:none}
+
     /* Hero */
     .hero{padding:80px 0 40px; text-align:center}
     .kicker{display:inline-block; font-size:13px; letter-spacing:.2px; color:#cbd5e1;
       background:var(--surface); border:1px solid var(--border); padding:6px 10px; border-radius:999px}
+    [data-theme="light"] .kicker{color:#475569}
     h1{font-size: clamp(32px, 6vw, 56px); line-height:1.1; margin:14px 0}
     .gradient-text{background:linear-gradient(90deg,var(--accent1),var(--accent2));
       -webkit-background-clip:text; background-clip:text; color:transparent}
     .lead{color:#cbd5e1; font-size: clamp(16px, 2.2vw, 20px); max-width:820px; margin:0 auto 18px}
+    [data-theme="light"] .lead{color:#334155}
     .chips{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:16px 0 26px}
     .chip{font-size:13px; color:#cbd5e1; border:1px solid var(--border); background:var(--surface);
       padding:6px 10px; border-radius:999px}
+    [data-theme="light"] .chip{color:#475569}
     .buttons{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
     .btn{display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; border-radius:10px; font-weight:700; border:1px solid var(--border)}
     .btn.primary{color:white; border:0; background:linear-gradient(135deg,var(--accent1),var(--accent2)); box-shadow:0 10px 30px rgba(6,182,212,.18)}
     .btn.ghost{background:var(--surface); color:#d1d5db}
+    [data-theme="light"] .btn.ghost{color:#0f172a}
     .hero-img{margin:32px auto 0; border-radius:14px; overflow:hidden; border:1px solid var(--border); max-width:980px}
     .hero-img img{display:block; width:100%; height:auto}
     /* Sections */
@@ -63,13 +115,21 @@
     .card:hover{transform:translateY(-2px); transition:.2s ease; box-shadow:0 10px 30px rgba(0,0,0,.18)}
     .card h3{margin:.2rem 0 6px}
     .card ul{margin:8px 0 0 18px; color:#cbd5e1}
+    [data-theme="light"] .card ul{color:#334155}
     .emoji{font-size:22px}
-    /* Portfolio */
-    .works{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px}
-    .work{position:relative; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#0f162f}
-    .work img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease}
-    .work:hover img{transform:scale(1.03)}
+    /* Slider (Portfolio) */
+    .slider{position:relative; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:var(--card)}
+    .slides{display:flex; transition:transform .5s cubic-bezier(.22,.61,.36,1); will-change:transform}
+    .slide{flex:0 0 100%; position:relative; aspect-ratio:16/9; background:#0f162f}
+    [data-theme="light"] .slide{background:#f1f5f9}
+    .slide img{width:100%; height:100%; object-fit:cover; display:block}
     .caption{position:absolute; left:10px; bottom:10px; background:rgba(0,0,0,.45); color:#e5e7eb; padding:6px 10px; border-radius:8px; font-size:13px; border:1px solid rgba(255,255,255,.18)}
+    .slider .nav{position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:999px; border:1px solid var(--border); background:rgba(0,0,0,.35); color:#fff; display:grid; place-items:center; font-size:20px; cursor:pointer}
+    [data-theme="light"] .slider .nav{background:rgba(255,255,255,.7); color:#0f172a}
+    .slider .prev{left:10px} .slider .next{right:10px}
+    .dots{display:flex; gap:8px; justify-content:center; padding:10px}
+    .dot{width:8px; height:8px; border-radius:999px; border:0; background:var(--muted); opacity:.6; cursor:pointer}
+    .dot[aria-selected="true"]{width:26px; opacity:1; background:linear-gradient(135deg,var(--accent1),var(--accent2))}
     /* Process */
     .steps{display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
     .step{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px}
@@ -78,7 +138,22 @@
     .contact{background:linear-gradient(135deg, rgba(124,58,237,.18), rgba(6,182,212,.18)); border:1px solid var(--border); border-radius:16px; padding:26px}
     .cta{display:flex; gap:12px; flex-wrap:wrap}
     .cta .btn{padding:12px 16px}
+    .contact-form{margin-top:14px; display:grid; gap:10px; grid-template-columns:repeat(2,1fr)}
+    .contact-form input,.contact-form select,.contact-form textarea{
+      width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border);
+      background:rgba(0,0,0,.25); color:#e5e7eb; outline:none
+    }
+    [data-theme="light"] .contact-form input,[data-theme="light"] .contact-form select,[data-theme="light"] .contact-form textarea{
+      background:rgba(0,0,0,.04); color:#0f172a
+    }
+    .contact-form textarea{min-height:120px; grid-column:1/-1; resize:vertical}
+    .contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{
+      border-color:transparent; box-shadow:0 0 0 2px rgba(124,58,237,.45), 0 0 0 4px rgba(6,182,212,.25)
+    }
+    .contact-form .full{grid-column:1/-1}
     footer{padding:34px 0 60px; color:#94a3b8; text-align:center; font-size:14px}
+    /* A11y */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     /* Responsive */
     @media (max-width: 980px){
       .card{grid-column:span 6}
@@ -95,16 +170,22 @@
 <body>
   <header>
     <div class="container">
-      <nav>
-        <div class="logo">
+      <nav aria-label="Главная навигация">
+        <a class="logo" href="./" aria-label="Art‑87 на главную">
           <div class="logo-badge"></div>
-          <a href="#"><span>3D Visualization</span></a>
-        </div>
-        <div class="nav-links">
-          <a href="#services">Услуги</a>
-          <a href="#portfolio">Портфолио</a>
-          <a href="#process">Процесс</a>
-          <a href="#contact">Контакты</a>
+          <span>Art‑87 · 3D Visualization</span>
+        </a>
+        <div class="controls">
+          <div class="nav-links">
+            <a href="#services">Услуги</a>
+            <a href="#portfolio">Портфолио</a>
+            <a href="#process">Процесс</a>
+            <a href="#contact">Контакты</a>
+          </div>
+          <button id="theme-toggle" class="btn-mini" type="button" aria-label="Переключить тему">
+            <span class="sun">☀️ Светлая</span>
+            <span class="moon">🌙 Тёмная</span>
+          </button>
         </div>
       </nav>
     </div>
@@ -128,7 +209,7 @@
         <a class="btn ghost" href="#portfolio">Смотреть портфолио</a>
       </div>
 
-      <!-- Пример обложки: можно удалить или заменить своей картинкой -->
+      <!-- Обложка: замени на свой кадр -->
       <div class="hero-img">
         <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=80" alt="Интерьерная 3D визуализация">
       </div>
@@ -179,42 +260,41 @@
     <section id="portfolio" class="container">
       <div class="section-head">
         <h2>Портфолио</h2>
-        <p class="muted">Замените изображения на свои рендеры (img/01.jpg и т.д.).</p>
+        <p class="muted">Листайте слайды или кликайте по точкам. Замените изображения на свои (img/01.jpg и т.д.).</p>
       </div>
 
-      <div class="works">
-        <figure class="work">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1505691723518-36a5ac3b2d8d?auto=format&fit=crop&w=1200&q=80" alt="Интерьер · гостиная" />
-          <figcaption class="caption">Интерьер · гостиная</figcaption>
-        </figure>
-        <figure class="work">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80" alt="Интерьер · кухня" />
-          <figcaption class="caption">Интерьер · кухня</figcaption>
-        </figure>
-        <figure class="work">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1582582621959-48d0994f28fe?auto=format&fit=crop&w=1200&q=80" alt="Экстерьер · дом" />
-          <figcaption class="caption">Экстерьер · дом</figcaption>
-        </figure>
-        <figure class="work">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80" alt="Экстерьер · ЖК" />
-          <figcaption class="caption">Экстерьер · ЖК</figcaption>
-        </figure>
-        <figure class="work">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1585386959984-a4155223168f?auto=format&fit=crop&w=1200&q=80" alt="Товар · студийный рендер" />
-          <figcaption class="caption">Товар · студийный рендер</figcaption>
-        </figure>
-        <figure class="work">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1520681474050-223bdee9d0d8?auto=format&fit=crop&w=1200&q=80" alt="Товар · композиция" />
-          <figcaption class="caption">Товар · композиция</figcaption>
-        </figure>
+      <!-- СЛАЙДЕР -->
+      <div class="slider" id="portfolioSlider" aria-label="Слайдер портфолио">
+        <div class="slides">
+          <figure class="slide">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1505691723518-36a5ac3b2d8d?auto=format&fit=crop&w=1600&q=80" alt="Интерьер · гостиная" />
+            <figcaption class="caption">Интерьер · гостиная</figcaption>
+          </figure>
+          <figure class="slide">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1600&q=80" alt="Интерьер · кухня" />
+            <figcaption class="caption">Интерьер · кухня</figcaption>
+          </figure>
+          <figure class="slide">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1582582621959-48d0994f28fe?auto=format&fit=crop&w=1600&q=80" alt="Экстерьер · дом" />
+            <figcaption class="caption">Экстерьер · дом</figcaption>
+          </figure>
+          <figure class="slide">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1600&q=80" alt="Экстерьер · ЖК" />
+            <figcaption class="caption">Экстерьер · ЖК</figcaption>
+          </figure>
+          <figure class="slide">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1585386959984-a4155223168f?auto=format&fit=crop&w=1600&q=80" alt="Товар · студийный рендер" />
+            <figcaption class="caption">Товар · студийный рендер</figcaption>
+          </figure>
+          <figure class="slide">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1520681474050-223bdee9d0d8?auto=format&fit=crop&w=1600&q=80" alt="Товар · композиция" />
+            <figcaption class="caption">Товар · композиция</figcaption>
+          </figure>
+        </div>
+        <button class="nav prev" aria-label="Предыдущий слайд">‹</button>
+        <button class="nav next" aria-label="Следующий слайд">›</button>
+        <div class="dots" role="tablist" aria-label="Пагинация слайдера"></div>
       </div>
-
-      <!-- Необязательно: онлайн‑просмотр 3D‑модели (GLB)
-      <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-      <model-viewer src="img/model.glb" alt="3D модель" ar ar-modes="webxr scene-viewer quick-look"
-        camera-controls environment-image="neutral" poster="img/poster.jpg" style="width:100%;height:460px;margin-top:12px;border-radius:14px;border:1px solid var(--border);background:#0f162f">
-      </model-viewer>
-      -->
     </section>
 
     <section id="process" class="container">
@@ -234,24 +314,133 @@
     <section id="contact" class="container">
       <div class="contact">
         <h2>Связаться</h2>
-        <p class="muted">Опишите задачу — пришлю бриф, сроки и стоимость. Удобно в Telegram или по email.</p>
+        <p class="muted">Опишите задачу — пришлю бриф, сроки и стоимость. Удобно в Telegram.</p>
         <div class="cta">
-          <a class="btn primary" href="https://t.me/yourusername" target="_blank" rel="noopener">Написать в Telegram</a>
-          <a class="btn ghost" href="mailto:you@example.com">Написать на Email</a>
+          <a class="btn primary" href="https://t.me/Arthakim" target="_blank" rel="noopener">Написать в Telegram</a>
+          <!-- Email добавим позже -->
         </div>
-        <p class="muted" style="margin-top:10px;font-size:14px">Замените контакты на свои (you@example.com, @yourusername).</p>
+
+        <!-- Форма заявок: подключим позже Formspree -->
+        <form action="https://formspree.io/f/xxxxxxxx" method="POST" class="contact-form">
+          <input type="hidden" name="_subject" value="Новая заявка с сайта Art‑87 · 3D виз">
+          <label class="sr-only" for="name">Имя</label>
+          <input id="name" type="text" name="name" placeholder="Имя*" required>
+          <label class="sr-only" for="email">Email</label>
+          <input id="email" type="email" name="email" placeholder="Email*" required>
+          <label class="sr-only" for="service">Услуга</label>
+          <select id="service" name="service" aria-label="Услуга">
+            <option value="">Тип услуги (опционально)</option>
+            <option>Интерьер</option>
+            <option>Экстерьер</option>
+            <option>Предметная визуализация</option>
+            <option>3D‑моделирование</option>
+          </select>
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <textarea name="message" placeholder="Коротко опишите задачу*" required></textarea>
+          <button class="btn primary full" type="submit">Отправить</button>
+        </form>
+
+        <p class="muted" style="margin-top:10px;font-size:14px">Email добавим позже. Для формы поставь URL от Formspree вместо xxxxxxxx — и всё заработает.</p>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="container">
-      © <span id="y"></span> Ваше имя — 3D визуализация и моделирование.
+      © <span id="y"></span> Art‑87 — 3D визуализация и моделирование.
     </div>
   </footer>
 
   <script>
+    // Год в футере
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Тема (светлая/тёмная)
+    (function(){
+      const key = 'theme';
+      const btn = document.getElementById('theme-toggle');
+      const root = document.documentElement;
+      const saved = localStorage.getItem(key);
+      if(saved){ root.setAttribute('data-theme', saved); }
+      else {
+        // Можно сделать авто по системе: раскомментируй 2 строки ниже и удали строку с 'dark'
+        // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        root.setAttribute('data-theme', 'dark');
+      }
+      btn.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem(key, next);
+      });
+    })();
+
+    // Слайдер портфолио (кнопки, точки, стрелки, свайп)
+    (function(){
+      const slider = document.getElementById('portfolioSlider');
+      if(!slider) return;
+      const track = slider.querySelector('.slides');
+      const slides = Array.from(track.children);
+      const prev = slider.querySelector('.prev');
+      const next = slider.querySelector('.next');
+      const dotsWrap = slider.querySelector('.dots');
+      let index = 0;
+
+      // Создаём точки
+      dotsWrap.innerHTML = slides.map((_, i) =>
+        `<button class="dot" role="tab" aria-selected="${i===0}" aria-controls="slide-${i+1}" id="tab-${i+1}">
+          <span class="sr-only">Слайд ${i+1}</span>
+        </button>`).join('');
+      const dots = Array.from(dotsWrap.children);
+
+      function clamp(i){ return Math.max(0, Math.min(i, slides.length-1)); }
+      function update(){
+        track.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach((d, i) => d.setAttribute('aria-selected', i===index));
+        prev.style.opacity = index===0 ? .5 : 1;
+        next.style.opacity = index===slides.length-1 ? .5 : 1;
+      }
+      function go(i){ index = clamp(i); update(); }
+
+      prev.addEventListener('click',()=> go(index-1));
+      next.addEventListener('click',()=> go(index+1));
+      dots.forEach((d,i)=> d.addEventListener('click', ()=> go(i)));
+
+      // Клавиатура
+      slider.addEventListener('keydown', (e)=>{
+        if(e.key==='ArrowRight') go(index+1);
+        if(e.key==='ArrowLeft')  go(index-1);
+      });
+
+      // Свайп (pointer events)
+      let startX = 0, down = false, pid = 0;
+      track.addEventListener('pointerdown', e => {
+        down = true; startX = e.clientX; pid = e.pointerId; track.setPointerCapture(pid);
+      });
+      track.addEventListener('pointerup', e => {
+        if(!down) return; down = false;
+        const dx = e.clientX - startX;
+        if(Math.abs(dx) > 50){ go(index + (dx < 0 ? 1 : -1)); }
+        try{ track.releasePointerCapture(pid); }catch(_){}
+      });
+      track.addEventListener('pointercancel', ()=> { down=false; });
+
+      update();
+    })();
+
+    // Если форма не подключена — перехват, чтобы не было пустой отправки
+    (function(){
+      const form = document.querySelector('.contact-form');
+      if(!form) return;
+      form.addEventListener('submit', (e)=>{
+        if((form.getAttribute('action')||'').includes('xxxxxxxx')){
+          e.preventDefault();
+          alert('Форма будет подключена позже. Напишите в Telegram: @Arthakim');
+        }
+      });
+    })();
   </script>
+
+  <noscript>Похоже, у вас отключён JavaScript — для переключения темы и слайдера нужен JS.</noscript>
 </body>
 </html>
