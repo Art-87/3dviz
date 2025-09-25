@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Интерьеры, экстерьеры, предметка. Фотореализм.">
   <meta name="twitter:image" content="https://art-87.github.io/3dviz/img/cover.jpg">
 
-  <!-- Favicon (положи файлы в корень репозитория) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
@@ -82,7 +82,7 @@
     [data-theme="light"] .btn-mini .sun{display:inline}
     [data-theme="light"] .btn-mini .moon{display:none}
 
-    /* Hero (текстовая часть) */
+    /* Hero (текст) */
     .hero{padding:80px 0 16px; text-align:center}
     .kicker{display:inline-block; font-size:13px; letter-spacing:.2px; color:#cbd5e1;
       background:var(--surface); border:1px solid var(--border); padding:6px 10px; border-radius:999px}
@@ -93,8 +93,7 @@
     .lead{color:#cbd5e1; font-size: clamp(16px, 2.2vw, 20px); max-width:820px; margin:0 auto 18px}
     [data-theme="light"] .lead{color:#334155}
     .chips{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:16px 0 26px}
-    .chip{font-size:13px; color:#cbd5e1; border:1px solid var(--border); background:var(--surface);
-      padding:6px 10px; border-radius:999px}
+    .chip{font-size:13px; color:#cbd5e1; border:1px solid var(--border); background:var(--surface); padding:6px 10px; border-radius:999px}
     [data-theme="light"] .chip{color:#475569}
     .buttons{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
     .btn{display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; border-radius:10px; font-weight:700; border:1px solid var(--border)}
@@ -102,36 +101,31 @@
     .btn.ghost{background:var(--surface); color:#d1d5db}
     [data-theme="light"] .btn.ghost{color:#0f172a}
 
-    /* HERO МОЗАИКА */
+    /* HERO МОЗАИКА (21:9) */
     .hero-mosaic{
       position: relative;
-      height: clamp(320px, 60vh, 580px);
+      width:min(1120px,92%);
+      aspect-ratio: 21 / 9;
       border-radius:14px; overflow:hidden;
       border:1px solid var(--border);
       margin:24px auto 0;
-      max-width:1120px; width:92%;
     }
-    /* Создаём мягкую дымку, чтобы текст читался */
     .hero-mosaic::after{
       content:""; position:absolute; inset:0;
       background:linear-gradient(to top, rgba(0,0,0,.35), transparent 40%);
       pointer-events:none;
     }
-    [data-theme="light"] .hero-mosaic::after{
-      background:linear-gradient(to top, rgba(0,0,0,.20), transparent 40%);
-    }
+    [data-theme="light"] .hero-mosaic::after{ background:linear-gradient(to top, rgba(0,0,0,.20), transparent 40%); }
 
     .mosaic{
       position:absolute; inset:0;
-      display:grid;
-      opacity:0; transition:opacity .6s ease;
+      display:grid; opacity:0; transition:opacity .6s ease;
     }
     .mosaic.is-active{ opacity:1 }
 
     .tile{
-      background-color:#0f162f; /* фон до загрузки */
+      background-color:#0f162f;
       background-repeat:no-repeat;
-      /* background-size и position задаются из JS на каждый тайл */
       transform: scale(1.08) rotate(var(--rot,0deg));
       opacity:0; will-change:transform,opacity;
     }
@@ -141,9 +135,7 @@
       from{ transform:scale(1.08) rotate(var(--rot,0deg)); opacity:0 }
       to  { transform:scale(1) rotate(0deg); opacity:1 }
     }
-    .tile.reveal{
-      animation: tileIn .8s var(--delay,0s) cubic-bezier(.22,.61,.36,1) forwards;
-    }
+    .tile.reveal{ animation: tileIn .8s var(--delay,0s) cubic-bezier(.22,.61,.36,1) forwards; }
 
     /* Sections */
     section{padding:64px 0}
@@ -165,7 +157,7 @@
     .slides{display:flex; transition:transform .5s cubic-bezier(.22,.61,.36,1); will-change:transform}
     .slide{flex:0 0 100%; position:relative; aspect-ratio:16/9; background:#0f162f}
     [data-theme="light"] .slide{background:#f1f5f9}
-    .slide img{width:100%; height:100%; object-fit:cover; display:block}
+    .slide img{width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block}
     .caption{position:absolute; left:10px; bottom:10px; background:rgba(0,0,0,.45); color:#e5e7eb; padding:6px 10px; border-radius:8px; font-size:13px; border:1px solid rgba(255,255,255,.18)}
     .slider .nav{position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:999px; border:1px solid var(--border); background:rgba(0,0,0,.35); color:#fff; display:grid; place-items:center; font-size:20px; cursor:pointer}
     [data-theme="light"] .slider .nav{background:rgba(255,255,255,.7); color:#0f172a}
@@ -258,12 +250,12 @@
       </div>
     </section>
 
-    <!-- HERO МОЗАИКА -->
+    <!-- HERO МОЗАИКА (21:9, 2 кадра Unsplash) -->
     <div class="hero-mosaic" id="heroMosaic" aria-hidden="true">
       <div class="mosaic" data-layer="0"></div>
       <div class="mosaic" data-layer="1"></div>
       <noscript>
-        <img src="img/hero.jpg" alt="3D визуализация" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&h=823&q=80" alt="3D визуализация" style="width:100%;height:100%;object-fit:cover;display:block;">
       </noscript>
     </div>
 
@@ -315,7 +307,6 @@
         <p class="muted">Листайте слайды или кликайте по точкам. Замените изображения на свои (img/01.jpg и т.д.).</p>
       </div>
 
-      <!-- СЛАЙДЕР -->
       <div class="slider" id="portfolioSlider" aria-label="Слайдер портфолио">
         <div class="slides">
           <figure class="slide">
@@ -369,7 +360,6 @@
         <p class="muted">Опишите задачу — пришлю бриф, сроки и стоимость. Удобно в Telegram.</p>
         <div class="cta">
           <a class="btn primary" href="https://t.me/Arthakim" target="_blank" rel="noopener">Написать в Telegram</a>
-          <!-- Email добавим позже -->
         </div>
 
         <!-- Форма заявок: подключим позже Formspree -->
@@ -407,7 +397,7 @@
     // Год в футере
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Тема (светлая/тёмная) + обновление meta theme-color
+    // Тема (светлая/тёмная) + theme-color
     (function(){
       const key = 'theme';
       const btn = document.getElementById('theme-toggle');
@@ -427,15 +417,20 @@
       });
     })();
 
-    // HERO МОЗАИКА: генерация, прелоад, автосмена
+    // HERO МОЗАИКА: 2 кадра Unsplash, прелоад, диагональная анимация, автосмена
     (function(){
       const wrap = document.getElementById('heroMosaic');
       if(!wrap) return;
       const layers = Array.from(wrap.querySelectorAll('.mosaic'));
-      const cols = 8, rows = 5;    // сетка мозаики (можно 10x6 для более мелких тайлов)
+      const cols = 10, rows = 6;
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Создаём тайлы в обоих слоях
+      // ДВА выбранных кадра Unsplash (21:9 кроп)
+      const heroImages = [
+        'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&h=823&q=80',
+        'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1920&h=823&q=80'
+      ];
+
       function buildLayer(el){
         el.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
         el.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
@@ -453,29 +448,14 @@
       }
       layers.forEach(buildLayer);
 
-      // Прелоад картинок, берём доступные
-      function preloadImages(urls, timeout=4000){
-        return new Promise(resolve=>{
-          const unique = [...new Set(urls)];
-          const ok = [];
-          let done = 0;
-          const timer = setTimeout(()=> resolve(ok), timeout);
-          unique.forEach(u=>{
-            const img = new Image();
-            img.onload = ()=>{ ok.push(u); check(); };
-            img.onerror = check;
-            img.src = u;
-          });
-          function check(){ done++; if(done===unique.length){ clearTimeout(timer); resolve(ok); } }
-        });
+      function preload(srcs){
+        return Promise.all(srcs.map(src => new Promise(res => {
+          const i = new Image();
+          i.onload = () => res(src);
+          i.onerror = () => res(null);
+          i.src = src;
+        }))).then(list => list.filter(Boolean));
       }
-
-      const candidates = [
-        'img/hero-1.jpg','img/hero-2.jpg','img/hero-3.jpg','img/hero-4.jpg',
-        'img/hero.jpg','img/01.jpg','img/02.jpg','img/03.jpg','img/04.jpg','img/05.jpg','img/06.jpg'
-      ];
-      const fallback = 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=80';
-
       function setLayerImage(el, url){
         el.querySelectorAll('.tile').forEach(t=>{
           t.style.backgroundImage = `url('${url}')`;
@@ -484,25 +464,25 @@
       function reveal(el){
         el.querySelectorAll('.tile').forEach(t=>{
           const x = +t.dataset.x, y = +t.dataset.y;
-          const delay = (x + y) * 0.035 + Math.random()*0.12; // диагональная волна + случайность
-          const rot = (Math.random()*2 - 1) * 2; // -2..2 градусов
-          t.classList.remove('reveal'); // перезапуск анимации
-          // force reflow
-          void t.offsetWidth;
+          const delay = (x + y) * 0.028 + Math.random()*0.10;
+          const rot = (Math.random()*2 - 1) * 2;
+          t.classList.remove('reveal'); void t.offsetWidth;
           t.style.setProperty('--delay', `${delay}s`);
           t.style.setProperty('--rot', `${rot}deg`);
           t.classList.add('reveal');
         });
       }
 
-      preloadImages(candidates).then(list=>{
-        const images = (list && list.length ? list : [fallback]);
+      preload(heroImages).then(imgs=>{
+        const images = imgs.length ? imgs : [heroImages[0]];
         let idx = 0, active = 0;
+
         setLayerImage(layers[active], images[idx]);
         layers[active].classList.add('is-active');
         reveal(layers[active]);
 
         function next(){
+          if(images.length < 2) return;
           idx = (idx + 1) % images.length;
           const prev = active;
           active = 1 - active;
@@ -513,7 +493,7 @@
         }
 
         let timer;
-        function start(){ if(reduce) return; stop(); timer = setInterval(next, 5000); }
+        function start(){ if(reduce || images.length < 2) return; stop(); timer = setInterval(next, 5000); }
         function stop(){ if(timer) clearInterval(timer); }
         wrap.addEventListener('mouseenter', stop);
         wrap.addEventListener('mouseleave', start);
@@ -522,7 +502,7 @@
       });
     })();
 
-    // Слайдер портфолио (стрелки, точки, клавиатура, свайп, автоплей)
+    // Слайдер портфолио — точное позиционирование (без «сдвига»)
     (function(){
       const slider = document.getElementById('portfolioSlider');
       if(!slider) return;
@@ -539,12 +519,16 @@
         </button>`).join('');
       const dots = Array.from(dotsWrap.children);
 
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function w(){ return slider.clientWidth; }
       function clamp(i){ return Math.max(0, Math.min(i, slides.length-1)); }
       function update(){
-        track.style.transform = `translateX(-${index * 100}%)`;
+        track.style.transform = `translate3d(-${index * w()}px, 0, 0)`;
         dots.forEach((d, i) => d.setAttribute('aria-selected', i===index));
-        prev.style.opacity = index===0 ? .5 : 1;
-        next.style.opacity = index===slides.length-1 ? .5 : 1;
+        const atStart = index===0, atEnd = index===slides.length-1;
+        prev.disabled = atStart; next.disabled = atEnd;
+        prev.style.opacity = atStart ? .5 : 1;
+        next.style.opacity = atEnd ? .5 : 1;
       }
       function go(i){ index = clamp(i); update(); }
 
@@ -557,7 +541,7 @@
         if(e.key==='ArrowLeft')  go(index-1);
       });
 
-      // Свайп
+      // свайп
       let startX = 0, down = false, pid = 0;
       track.addEventListener('pointerdown', e => { down = true; startX = e.clientX; pid = e.pointerId; track.setPointerCapture(pid); });
       track.addEventListener('pointerup', e => {
@@ -568,10 +552,12 @@
       });
       track.addEventListener('pointercancel', ()=> { down=false; });
 
+      window.addEventListener('resize', update);
+      if('ResizeObserver' in window){ new ResizeObserver(update).observe(slider); }
+
       update();
 
-      // Автоплей
-      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // автопрокрутка
       let timer;
       function startAuto(){ if(reduce) return; stopAuto(); timer = setInterval(()=> go((index+1) % slides.length), 4000); }
       function stopAuto(){ if(timer) clearInterval(timer); }
@@ -581,7 +567,7 @@
       startAuto();
     })();
 
-    // Если форма не подключена — перехват, чтобы не было пустой отправки
+    // Если форма не подключена — перехват
     (function(){
       const form = document.querySelector('.contact-form');
       if(!form) return;
@@ -594,6 +580,6 @@
     })();
   </script>
 
-  <noscript>Похоже, у вас отключён JavaScript — для мозаики и слайдеров нужен JS.</noscript>
+  <noscript>Похоже, у вас отключён JavaScript — для мозаики и слайдера нужен JS.</noscript>
 </body>
 </html>
