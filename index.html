@@ -82,8 +82,8 @@
     [data-theme="light"] .btn-mini .sun{display:inline}
     [data-theme="light"] .btn-mini .moon{display:none}
 
-    /* Hero */
-    .hero{padding:80px 0 40px; text-align:center}
+    /* Hero (текстовая часть) */
+    .hero{padding:80px 0 16px; text-align:center}
     .kicker{display:inline-block; font-size:13px; letter-spacing:.2px; color:#cbd5e1;
       background:var(--surface); border:1px solid var(--border); padding:6px 10px; border-radius:999px}
     [data-theme="light"] .kicker{color:#475569}
@@ -101,8 +101,49 @@
     .btn.primary{color:white; border:0; background:linear-gradient(135deg,var(--accent1),var(--accent2)); box-shadow:0 10px 30px rgba(6,182,212,.18)}
     .btn.ghost{background:var(--surface); color:#d1d5db}
     [data-theme="light"] .btn.ghost{color:#0f172a}
-    .hero-img{margin:32px auto 0; border-radius:14px; overflow:hidden; border:1px solid var(--border); max-width:980px}
-    .hero-img img{display:block; width:100%; height:auto}
+
+    /* HERO МОЗАИКА */
+    .hero-mosaic{
+      position: relative;
+      height: clamp(320px, 60vh, 580px);
+      border-radius:14px; overflow:hidden;
+      border:1px solid var(--border);
+      margin:24px auto 0;
+      max-width:1120px; width:92%;
+    }
+    /* Создаём мягкую дымку, чтобы текст читался */
+    .hero-mosaic::after{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,.35), transparent 40%);
+      pointer-events:none;
+    }
+    [data-theme="light"] .hero-mosaic::after{
+      background:linear-gradient(to top, rgba(0,0,0,.20), transparent 40%);
+    }
+
+    .mosaic{
+      position:absolute; inset:0;
+      display:grid;
+      opacity:0; transition:opacity .6s ease;
+    }
+    .mosaic.is-active{ opacity:1 }
+
+    .tile{
+      background-color:#0f162f; /* фон до загрузки */
+      background-repeat:no-repeat;
+      /* background-size и position задаются из JS на каждый тайл */
+      transform: scale(1.08) rotate(var(--rot,0deg));
+      opacity:0; will-change:transform,opacity;
+    }
+    [data-theme="light"] .tile{ background-color:#f1f5f9 }
+
+    @keyframes tileIn{
+      from{ transform:scale(1.08) rotate(var(--rot,0deg)); opacity:0 }
+      to  { transform:scale(1) rotate(0deg); opacity:1 }
+    }
+    .tile.reveal{
+      animation: tileIn .8s var(--delay,0s) cubic-bezier(.22,.61,.36,1) forwards;
+    }
 
     /* Sections */
     section{padding:64px 0}
@@ -132,9 +173,7 @@
     .dots{display:flex; gap:8px; justify-content:center; padding:10px}
     .dot{width:8px; height:8px; border-radius:999px; border:0; background:var(--muted); opacity:.6; cursor:pointer}
     .dot[aria-selected="true"]{width:26px; opacity:1; background:linear-gradient(135deg,var(--accent1),var(--accent2))}
-    @media (prefers-reduced-motion: reduce){
-      .slides{transition:none}
-    }
+    @media (prefers-reduced-motion: reduce){ .slides{transition:none} }
 
     /* Process */
     .steps{display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
@@ -165,9 +204,7 @@
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
     /* Responsive */
-    @media (max-width: 980px){
-      .card{grid-column:span 6}
-    }
+    @media (max-width: 980px){ .card{grid-column:span 6} }
     @media (max-width: 640px){
       .nav-links{display:none}
       .hero{padding-top:56px}
@@ -219,12 +256,16 @@
         <a class="btn primary" href="#contact">Получить расчёт</a>
         <a class="btn ghost" href="#portfolio">Смотреть портфолио</a>
       </div>
-
-      <!-- Обложка: замените на свой кадр -->
-      <div class="hero-img">
-        <img src="img/hero.jpg" width="1600" height="900" fetchpriority="high" alt="Интерьерная 3D визуализация">
-      </div>
     </section>
+
+    <!-- HERO МОЗАИКА -->
+    <div class="hero-mosaic" id="heroMosaic" aria-hidden="true">
+      <div class="mosaic" data-layer="0"></div>
+      <div class="mosaic" data-layer="1"></div>
+      <noscript>
+        <img src="img/hero.jpg" alt="3D визуализация" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </noscript>
+    </div>
 
     <section id="services" class="container">
       <div class="section-head">
@@ -386,6 +427,101 @@
       });
     })();
 
+    // HERO МОЗАИКА: генерация, прелоад, автосмена
+    (function(){
+      const wrap = document.getElementById('heroMosaic');
+      if(!wrap) return;
+      const layers = Array.from(wrap.querySelectorAll('.mosaic'));
+      const cols = 8, rows = 5;    // сетка мозаики (можно 10x6 для более мелких тайлов)
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Создаём тайлы в обоих слоях
+      function buildLayer(el){
+        el.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        el.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        el.innerHTML = '';
+        for(let y=0; y<rows; y++){
+          for(let x=0; x<cols; x++){
+            const t = document.createElement('div');
+            t.className = 'tile';
+            t.dataset.x = x; t.dataset.y = y;
+            t.style.backgroundPosition = `${(x/(cols-1))*100}% ${(y/(rows-1))*100}%`;
+            t.style.backgroundSize = `${cols*100}% ${rows*100}%`;
+            el.appendChild(t);
+          }
+        }
+      }
+      layers.forEach(buildLayer);
+
+      // Прелоад картинок, берём доступные
+      function preloadImages(urls, timeout=4000){
+        return new Promise(resolve=>{
+          const unique = [...new Set(urls)];
+          const ok = [];
+          let done = 0;
+          const timer = setTimeout(()=> resolve(ok), timeout);
+          unique.forEach(u=>{
+            const img = new Image();
+            img.onload = ()=>{ ok.push(u); check(); };
+            img.onerror = check;
+            img.src = u;
+          });
+          function check(){ done++; if(done===unique.length){ clearTimeout(timer); resolve(ok); } }
+        });
+      }
+
+      const candidates = [
+        'img/hero-1.jpg','img/hero-2.jpg','img/hero-3.jpg','img/hero-4.jpg',
+        'img/hero.jpg','img/01.jpg','img/02.jpg','img/03.jpg','img/04.jpg','img/05.jpg','img/06.jpg'
+      ];
+      const fallback = 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=80';
+
+      function setLayerImage(el, url){
+        el.querySelectorAll('.tile').forEach(t=>{
+          t.style.backgroundImage = `url('${url}')`;
+        });
+      }
+      function reveal(el){
+        el.querySelectorAll('.tile').forEach(t=>{
+          const x = +t.dataset.x, y = +t.dataset.y;
+          const delay = (x + y) * 0.035 + Math.random()*0.12; // диагональная волна + случайность
+          const rot = (Math.random()*2 - 1) * 2; // -2..2 градусов
+          t.classList.remove('reveal'); // перезапуск анимации
+          // force reflow
+          void t.offsetWidth;
+          t.style.setProperty('--delay', `${delay}s`);
+          t.style.setProperty('--rot', `${rot}deg`);
+          t.classList.add('reveal');
+        });
+      }
+
+      preloadImages(candidates).then(list=>{
+        const images = (list && list.length ? list : [fallback]);
+        let idx = 0, active = 0;
+        setLayerImage(layers[active], images[idx]);
+        layers[active].classList.add('is-active');
+        reveal(layers[active]);
+
+        function next(){
+          idx = (idx + 1) % images.length;
+          const prev = active;
+          active = 1 - active;
+          setLayerImage(layers[active], images[idx]);
+          reveal(layers[active]);
+          layers[active].classList.add('is-active');
+          layers[prev].classList.remove('is-active');
+        }
+
+        let timer;
+        function start(){ if(reduce) return; stop(); timer = setInterval(next, 5000); }
+        function stop(){ if(timer) clearInterval(timer); }
+        wrap.addEventListener('mouseenter', stop);
+        wrap.addEventListener('mouseleave', start);
+        document.addEventListener('visibilitychange', ()=> document.hidden ? stop() : start());
+        start();
+      });
+    })();
+
     // Слайдер портфолио (стрелки, точки, клавиатура, свайп, автоплей)
     (function(){
       const slider = document.getElementById('portfolioSlider');
@@ -397,7 +533,6 @@
       const dotsWrap = slider.querySelector('.dots');
       let index = 0;
 
-      // Точки
       dotsWrap.innerHTML = slides.map((_, i) =>
         `<button class="dot" role="tab" aria-selected="${i===0}" aria-controls="slide-${i+1}" id="tab-${i+1}">
           <span class="sr-only">Слайд ${i+1}</span>
@@ -417,17 +552,14 @@
       next.addEventListener('click',()=> go(index+1));
       dots.forEach((d,i)=> d.addEventListener('click', ()=> go(i)));
 
-      // Клавиатура
       slider.addEventListener('keydown', (e)=>{
         if(e.key==='ArrowRight') go(index+1);
         if(e.key==='ArrowLeft')  go(index-1);
       });
 
-      // Свайп (pointer events)
+      // Свайп
       let startX = 0, down = false, pid = 0;
-      track.addEventListener('pointerdown', e => {
-        down = true; startX = e.clientX; pid = e.pointerId; track.setPointerCapture(pid);
-      });
+      track.addEventListener('pointerdown', e => { down = true; startX = e.clientX; pid = e.pointerId; track.setPointerCapture(pid); });
       track.addEventListener('pointerup', e => {
         if(!down) return; down = false;
         const dx = e.clientX - startX;
@@ -438,7 +570,7 @@
 
       update();
 
-      // Автоплей (4 сек), пауза при наведении/переключении вкладок, отключение при reduce motion
+      // Автоплей
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let timer;
       function startAuto(){ if(reduce) return; stopAuto(); timer = setInterval(()=> go((index+1) % slides.length), 4000); }
@@ -462,6 +594,6 @@
     })();
   </script>
 
-  <noscript>Похоже, у вас отключён JavaScript — для переключения темы и слайдера нужен JS.</noscript>
+  <noscript>Похоже, у вас отключён JavaScript — для мозаики и слайдеров нужен JS.</noscript>
 </body>
 </html>
