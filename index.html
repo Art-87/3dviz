@@ -138,63 +138,60 @@
     [data-theme="light"] .card ul{color:#334155}
     .emoji{font-size:22px}
 
-    /* Portfolio: горизонтальная галерея + лайтбокс */
+    /* Portfolio — Coverflow */
     .filters{display:flex; gap:8px; flex-wrap:wrap}
     .filters .chip{cursor:pointer; user-select:none}
     .filters .chip.is-active{background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:#fff; border:0}
 
-    .gallery-wrap{position:relative}
-    .gallery-h{
-      display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory;
-      padding:8px 8px 16px; border-radius:14px; border:1px solid var(--border); background:var(--card);
-      -webkit-overflow-scrolling:touch; touch-action: pan-x; cursor:grab;
+    .cf{ position:relative; perspective:1200px }
+    .cf-viewport{
+      position:relative; width:100%; aspect-ratio:16/9;
+      border:1px solid var(--border); background:var(--card); border-radius:14px; overflow:visible
     }
-    .gallery-h.dragging{cursor:grabbing}
-    .gallery-h::-webkit-scrollbar{height:10px}
-    .gallery-h::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:999px}
-    [data-theme="light"] .gallery-h::-webkit-scrollbar-thumb{background:rgba(2,6,23,.18)}
-    .gallery-h::before,.gallery-h::after{
-      content:""; position:absolute; top:0; bottom:0; width:36px; pointer-events:none;
+    .cf-track{ position:absolute; inset:0; transform-style:preserve-3d }
+    .cf-item{
+      position:absolute; top:50%; left:50%;
+      width:min(72%, 820px); aspect-ratio:16/9;
+      border-radius:12px; overflow:hidden; border:1px solid var(--border);
+      background:#0f162f; box-shadow:0 20px 60px rgba(0,0,0,.35);
+      will-change:transform,opacity;
+      transition: transform .45s cubic-bezier(.22,.61,.36,1), opacity .3s
     }
-    .gallery-h::before{left:0; background:linear-gradient(to right, var(--bg), transparent)}
-    .gallery-h::after{right:0; background:linear-gradient(to left, var(--bg), transparent)}
-
-    .item{
-      position:relative; flex:0 0 clamp(260px, 60vw, 520px); aspect-ratio:16/9;
-      border-radius:12px; overflow:hidden; border:1px solid var(--border); scroll-snap-align:center; background:#0f162f;
-    }
-    [data-theme="light"] .item{background:#f1f5f9}
-    .item img{width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block; transition:transform .35s ease}
-    .item:hover img{transform:scale(1.03)}
-    .item figcaption{position:absolute; left:10px; bottom:10px; background:rgba(0,0,0,.45); color:#e5e7eb; padding:6px 10px; border-radius:8px; font-size:13px; border:1px solid rgba(255,255,255,.18)}
-    .gbtn{
+    [data-theme="light"] .cf-item{ background:#f1f5f9; box-shadow:0 12px 30px rgba(2,6,23,.15) }
+    .cf-item img{ width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block }
+    .cf .cf-nav{
       position:absolute; top:50%; transform:translateY(-50%);
       width:42px; height:42px; border-radius:999px; border:1px solid var(--border);
-      background:rgba(0,0,0,.35); color:#fff; display:grid; place-items:center; font-size:20px; cursor:pointer
+      background:rgba(0,0,0,.35); color:#fff; display:grid; place-items:center; font-size:20px; cursor:pointer; z-index:5
     }
-    [data-theme="light"] .gbtn{background:rgba(255,255,255,.7); color:#0f172a}
-    .gbtn.prev{left:6px} .gbtn.next{right:6px}
+    [data-theme="light"] .cf .cf-nav{ background:rgba(255,255,255,.7); color:#0f172a }
+    .cf .cf-nav.prev{ left:10px } .cf .cf-nav.next{ right:10px }
+    .cf-dots{ display:flex; gap:8px; justify-content:center; padding:10px }
+    .cf-dots .dot{ width:8px; height:8px; border-radius:999px; border:0; background:var(--muted); opacity:.6; cursor:pointer }
+    .cf-dots .dot[aria-selected="true"]{ width:26px; opacity:1; background:linear-gradient(135deg,var(--accent1),var(--accent2)) }
 
-    /* Lightbox */
+    /* Lightbox (общий) */
     .lightbox{
-      position:fixed; inset:0; background:rgba(0,0,0,.85); display:none; align-items:center; justify-content:center; z-index:1000; padding:24px
+      position:fixed; inset:0; background:rgba(0,0,0,.85);
+      display:none; align-items:center; justify-content:center; z-index:1000; padding:24px
     }
-    .lightbox.is-open{display:flex}
-    .lightbox .frame{position:relative; max-width:92vw; max-height:86vh}
-    .lightbox img{display:block; max-width:100%; max-height:100%; border-radius:12px}
-    .lightbox .cap{color:#e5e7eb; text-align:center; margin-top:10px}
+    .lightbox.is-open{ display:flex }
+    .lightbox .frame{ position:relative; max-width:92vw; max-height:86vh }
+    .lightbox img{ display:block; max-width:100%; max-height:100%; border-radius:12px }
+    .lightbox .cap{ color:#e5e7eb; text-align:center; margin-top:10px }
     .lightbox .close,.lightbox .lb-prev,.lightbox .lb-next{
-      position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:999px; border:1px solid rgba(255,255,255,.25);
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:42px; height:42px; border-radius:999px; border:1px solid rgba(255,255,255,.25);
       background:rgba(255,255,255,.15); color:#fff; display:grid; place-items:center; font-size:20px; cursor:pointer
     }
-    .lightbox .close{top:-12px; right:-12px; transform:none}
-    .lightbox .lb-prev{left:-56px} .lightbox .lb-next{right:-56px}
+    .lightbox .close{ top:-12px; right:-12px; transform:none }
+    .lightbox .lb-prev{ left:-56px } .lightbox .lb-next{ right:-56px }
     @media (max-width: 720px){
-      .lightbox .lb-prev{left:6px} .lightbox .lb-next{right:6px}
-      .lightbox .close{right:6px; top:6px}
+      .lightbox .lb-prev{ left:6px } .lightbox .lb-next{ right:6px }
+      .lightbox .close{ right:6px; top:6px }
     }
 
-    /* Process, Contact, Footer (как было) */
+    /* Process, Contact, Footer */
     .steps{display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
     .step{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px}
     .step .num{width:28px; height:28px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; font-weight:800; color:white; background:linear-gradient(135deg,var(--accent1),var(--accent2)); margin-bottom:10px}
@@ -209,10 +206,10 @@
     .contact-form .full{grid-column:1/-1}
     footer{padding:34px 0 60px; color:#94a3b8; text-align:center; font-size:14px}
 
+    /* Helpers */
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     @media (max-width: 980px){ .card{grid-column:span 6} }
     @media (max-width: 640px){ .nav-links{display:none} .hero{padding-top:56px} .card{grid-column:span 12} }
-
     html{scroll-behavior:smooth}
   </style>
 </head>
@@ -310,7 +307,7 @@
       </div>
     </section>
 
-    <!-- ПОРТФОЛИО: горизонтальная галерея с фильтрами и лайтбоксом -->
+    <!-- ПОРТФОЛИО: coverflow + фильтры + лайтбокс -->
     <section id="portfolio" class="container">
       <div class="section-head">
         <h2>Портфолио</h2>
@@ -322,36 +319,39 @@
         </div>
       </div>
 
-      <div class="gallery-wrap">
-        <div class="gallery-h" id="galleryH" tabindex="0" aria-label="Галерея портфолио">
-          <figure class="item" data-cat="interior">
-            <img src="img/01.jpg" width="1600" height="900" alt="Интерьер · гостиная">
-            <figcaption>Интерьер · гостиная</figcaption>
-          </figure>
-          <figure class="item" data-cat="interior">
-            <img src="img/02.jpg" width="1600" height="900" alt="Интерьер · кухня">
-            <figcaption>Интерьер · кухня</figcaption>
-          </figure>
-          <figure class="item" data-cat="exterior">
-            <img src="img/03.jpg" width="1600" height="900" alt="Экстерьер · дом">
-            <figcaption>Экстерьер · дом</figcaption>
-          </figure>
-          <figure class="item" data-cat="exterior">
-            <img src="img/04.jpg" width="1600" height="900" alt="Экстерьер · ЖК">
-            <figcaption>Экстерьер · ЖК</figcaption>
-          </figure>
-          <figure class="item" data-cat="product">
-            <img src="img/05.jpg" width="1600" height="900" alt="Товар · студийный рендер">
-            <figcaption>Товар · студийный рендер</figcaption>
-          </figure>
-          <figure class="item" data-cat="product">
-            <img src="img/06.jpg" width="1600" height="900" alt="Товар · композиция">
-            <figcaption>Товар · композиция</figcaption>
-          </figure>
+      <div class="cf" id="coverflow" aria-label="Портфолио coverflow">
+        <div class="cf-viewport">
+          <div class="cf-track">
+            <figure class="cf-item" data-cat="interior">
+              <img src="img/01.jpg" width="1600" height="900" alt="Интерьер · гостиная">
+              <figcaption class="sr-only">Интерьер · гостиная</figcaption>
+            </figure>
+            <figure class="cf-item" data-cat="interior">
+              <img src="img/02.jpg" width="1600" height="900" alt="Интерьер · кухня">
+              <figcaption class="sr-only">Интерьер · кухня</figcaption>
+            </figure>
+            <figure class="cf-item" data-cat="exterior">
+              <img src="img/03.jpg" width="1600" height="900" alt="Экстерьер · дом">
+              <figcaption class="sr-only">Экстерьер · дом</figcaption>
+            </figure>
+            <figure class="cf-item" data-cat="exterior">
+              <img src="img/04.jpg" width="1600" height="900" alt="Экстерьер · ЖК">
+              <figcaption class="sr-only">Экстерьер · ЖК</figcaption>
+            </figure>
+            <figure class="cf-item" data-cat="product">
+              <img src="img/05.jpg" width="1600" height="900" alt="Товар · студийный рендер">
+              <figcaption class="sr-only">Товар · студийный рендер</figcaption>
+            </figure>
+            <figure class="cf-item" data-cat="product">
+              <img src="img/06.jpg" width="1600" height="900" alt="Товар · композиция">
+              <figcaption class="sr-only">Товар · композиция</figcaption>
+            </figure>
+          </div>
         </div>
 
-        <button class="gbtn prev" aria-label="Прокрутить влево" type="button">‹</button>
-        <button class="gbtn next" aria-label="Прокрутить вправо" type="button">›</button>
+        <button class="cf-nav prev" aria-label="Предыдущая работа" type="button">‹</button>
+        <button class="cf-nav next" aria-label="Следующая работа" type="button">›</button>
+        <div class="cf-dots" role="tablist" aria-label="Пагинация"></div>
       </div>
     </section>
 
@@ -419,11 +419,9 @@
       const root = document.documentElement;
       const metaTC = document.querySelector('meta[name="theme-color"]');
       const colors = { dark: '#0b1020', light: '#f8fafc' };
-
       const saved = localStorage.getItem(key);
       if(saved){ root.setAttribute('data-theme', saved); metaTC && (metaTC.content = colors[saved] || colors.dark); }
       else { root.setAttribute('data-theme', 'dark'); metaTC && (metaTC.content = colors.dark); }
-
       btn.addEventListener('click', () => {
         const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
@@ -440,7 +438,7 @@
       const cols = 10, rows = 6;
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Кадры Unsplash (21:9)
+      // Два кадра Unsplash (21:9 кроп)
       const heroImages = [
         'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&h=823&q=80',
         'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1920&h=823&q=80'
@@ -491,7 +489,6 @@
       preload(heroImages).then(imgs=>{
         const images = imgs.length ? imgs : [heroImages[0]];
         let idx = 0, active = 0;
-
         setLayerImage(layers[active], images[idx]);
         layers[active].classList.add('is-active');
         reveal(layers[active]);
@@ -517,29 +514,99 @@
       });
     })();
 
-    // ПОРТФОЛИО: горизонтальная галерея + фильтры + лайтбокс
+    // Portfolio — Coverflow (фильтры, навигация, клавиатура, колесо, свайп, лайтбокс)
     (function(){
-      const gallery = document.getElementById('galleryH');
-      if(!gallery) return;
+      const root = document.getElementById('coverflow');
+      if(!root) return;
+      const track = root.querySelector('.cf-track');
+      const vp = root.querySelector('.cf-viewport');
+      const btnPrev = root.querySelector('.cf-nav.prev');
+      const btnNext = root.querySelector('.cf-nav.next');
+      const dotsWrap = root.querySelector('.cf-dots');
       const chips = document.querySelectorAll('#portfolio .filters .chip');
-      const prevBtn = document.querySelector('#portfolio .gbtn.prev');
-      const nextBtn = document.querySelector('#portfolio .gbtn.next');
 
-      function visibleItems(){
-        return Array.from(gallery.querySelectorAll('.item')).filter(it => it.style.display !== 'none');
+      let all = Array.from(track.querySelectorAll('.cf-item'));
+      let visible = all.slice();
+      let index = 0;
+
+      function buildDots(){
+        dotsWrap.innerHTML = visible.map((_,i)=>`<button class="dot" aria-selected="${i===index}" type="button"><span class="sr-only">Работа ${i+1}</span></button>`).join('');
+        Array.from(dotsWrap.children).forEach((d,i)=> d.addEventListener('click', ()=> go(i)));
+      }
+      function transformFor(offset){
+        const abs = Math.abs(offset);
+        const w = vp.clientWidth;
+        const step = Math.min(w*0.28, 360);
+        const x = offset * step;
+        const z = Math.max(0, 140 - abs*90);
+        const ry = -offset * 22;
+        const scale = 1 - Math.min(abs*0.08, 0.34);
+        const opacity = 1 - Math.min(abs*0.15, 0.6);
+        return { x, z, ry, scale, opacity };
+      }
+      function update(){
+        visible.forEach((el,i)=>{
+          const off = i - index;
+          const {x,z,ry,scale,opacity} = transformFor(off);
+          el.style.transform = `translate(-50%,-50%) translateX(${x}px) translateZ(${z}px) rotateY(${ry}deg) scale(${scale})`;
+          el.style.opacity = opacity;
+          el.style.zIndex = String(1000 - Math.abs(off));
+        });
+        if(dotsWrap.children.length === visible.length){
+          Array.from(dotsWrap.children).forEach((d,i)=> d.setAttribute('aria-selected', i===index));
+        } else {
+          buildDots();
+        }
+        const atStart = index===0, atEnd = index===visible.length-1;
+        btnPrev.disabled = atStart; btnNext.disabled = atEnd;
+        btnPrev.style.opacity = atStart? .5 : 1;
+        btnNext.style.opacity = atEnd? .5 : 1;
+      }
+      function go(i){
+        index = Math.max(0, Math.min(i, visible.length-1));
+        update();
       }
 
-      // Фильтрация
-      chips.forEach(ch => ch.addEventListener('click', ()=>{
+      // Фильтры
+      chips.forEach(ch=> ch.addEventListener('click', ()=>{
         chips.forEach(c=>c.classList.remove('is-active'));
         ch.classList.add('is-active');
         const f = ch.dataset.filter;
-        gallery.querySelectorAll('.item').forEach(it=>{
-          const show = f==='all' || it.dataset.cat===f;
-          it.style.display = show ? '' : 'none';
-        });
-        gallery.scrollTo({left: 0, behavior: 'smooth'});
+        visible = (f==='all') ? all.slice() : all.filter(el => el.dataset.cat === f);
+        index = 0;
+        all.forEach(el => el.style.display = visible.includes(el) ? '' : 'none');
+        buildDots(); update();
       }));
+
+      // Кнопки
+      btnPrev.addEventListener('click', ()=> go(index-1));
+      btnNext.addEventListener('click', ()=> go(index+1));
+
+      // Клавиатура
+      root.addEventListener('keydown', e=>{
+        if(e.key==='ArrowLeft') go(index-1);
+        if(e.key==='ArrowRight') go(index+1);
+      });
+
+      // Колесо → перелистывание
+      root.addEventListener('wheel', (e)=>{
+        if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+          e.preventDefault();
+          go(index + (e.deltaY > 0 ? 1 : -1));
+        }
+      }, {passive:false});
+
+      // Свайп/перетаскивание
+      let down=false, startX=0, pid=0;
+      track.addEventListener('pointerdown', e=>{ down=true; startX=e.clientX; pid=e.pointerId; track.setPointerCapture(pid); });
+      track.addEventListener('pointermove', e=>{
+        if(!down) return;
+        const dx = e.clientX - startX;
+        if(Math.abs(dx)>60){ go(index + (dx<0?1:-1)); startX=e.clientX; }
+      });
+      function endDrag(){ down=false; }
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
 
       // Лайтбокс
       const lb = document.createElement('div');
@@ -555,35 +622,29 @@
       document.body.appendChild(lb);
       const lbImg = lb.querySelector('img'), lbCap = lb.querySelector('.cap');
       const lbClose = lb.querySelector('.close'), lbPrev = lb.querySelector('.lb-prev'), lbNext = lb.querySelector('.lb-next');
-      let idx = 0;
+      let lbIdx = 0;
 
       function openLB(i){
-        const items = visibleItems();
-        if(!items.length) return;
-        idx = Math.max(0, Math.min(i, items.length-1));
-        const fig = items[idx];
+        const items = visible; if(!items.length) return;
+        lbIdx = Math.max(0, Math.min(i, items.length-1));
+        const fig = items[lbIdx];
         const img = fig.querySelector('img');
-        const cap = fig.querySelector('figcaption')?.textContent || '';
         lbImg.src = img.currentSrc || img.src;
         lbImg.alt = img.alt || '';
-        lbCap.textContent = cap;
-        lb.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
+        lbCap.textContent = fig.querySelector('figcaption')?.textContent || '';
+        lb.classList.add('is-open'); document.body.style.overflow='hidden';
       }
-      function closeLB(){ lb.classList.remove('is-open'); document.body.style.overflow = ''; }
-      function navLB(dir){ const items = visibleItems(); if(!items.length) return; idx = (idx + dir + items.length) % items.length; openLB(idx); }
+      function closeLB(){ lb.classList.remove('is-open'); document.body.style.overflow=''; }
+      function navLB(d){ const items=visible; if(!items.length) return; lbIdx = (lbIdx + d + items.length) % items.length; openLB(lbIdx); }
 
-      gallery.querySelectorAll('.item').forEach((it, i)=>{
-        it.addEventListener('click', ()=> {
-          const items = visibleItems();
-          const visibleIndex = items.indexOf(it);
-          openLB(visibleIndex >= 0 ? visibleIndex : i);
-        });
-      });
+      all.forEach((el,i)=> el.addEventListener('click', ()=>{
+        const start = visible.indexOf(el);
+        openLB(start>=0 ? start : i);
+      }));
       lbClose.addEventListener('click', closeLB);
       lbPrev.addEventListener('click', ()=> navLB(-1));
       lbNext.addEventListener('click', ()=> navLB(1));
-      lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLB(); });
+      lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLB(); });
       document.addEventListener('keydown', (e)=>{
         if(!lb.classList.contains('is-open')) return;
         if(e.key==='Escape') closeLB();
@@ -591,34 +652,27 @@
         if(e.key==='ArrowLeft')  navLB(-1);
       });
 
-      // Прокрутка кнопками
-      function step(){ return Math.round(gallery.clientWidth * 0.9); }
-      prevBtn.addEventListener('click', ()=> gallery.scrollBy({left: -step(), behavior: 'smooth'}));
-      nextBtn.addEventListener('click', ()=> gallery.scrollBy({left:  step(), behavior: 'smooth'}));
+      // Ресайз
+      if('ResizeObserver' in window){ new ResizeObserver(update).observe(vp); }
+      window.addEventListener('resize', update);
 
-      // Колесо мыши → горизонтальный скролл
-      gallery.addEventListener('wheel', (e)=>{
-        if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+      // Старт
+      buildDots(); update();
+    })();
+
+    // Если форма не подключена — перехват
+    (function(){
+      const form = document.querySelector('.contact-form');
+      if(!form) return;
+      form.addEventListener('submit', (e)=>{
+        if((form.getAttribute('action')||'').includes('xxxxxxxx')){
           e.preventDefault();
-          gallery.scrollLeft += e.deltaY;
+          alert('Форма будет подключена позже. Напишите в Telegram: @Arthakim');
         }
-      }, {passive:false});
-
-      // Перетаскивание мышью
-      let down=false, startX=0, startLeft=0, pid=0;
-      gallery.addEventListener('pointerdown', e=>{
-        down=true; startX=e.clientX; startLeft=gallery.scrollLeft; pid=e.pointerId; gallery.setPointerCapture(pid); gallery.classList.add('dragging');
       });
-      gallery.addEventListener('pointermove', e=>{
-        if(!down) return;
-        gallery.scrollLeft = startLeft - (e.clientX - startX);
-      });
-      function endDrag(){ down=false; gallery.classList.remove('dragging'); }
-      gallery.addEventListener('pointerup', endDrag);
-      gallery.addEventListener('pointercancel', endDrag);
     })();
   </script>
 
-  <noscript>Похоже, у вас отключён JavaScript — для мозаики, галереи и лайтбокса нужен JS.</noscript>
+  <noscript>Похоже, у вас отключён JavaScript — для мозаики и портфолио нужен JS.</noscript>
 </body>
 </html>
