@@ -101,27 +101,47 @@
     .btn.ghost{background:var(--surface); color:#d1d5db}
     [data-theme="light"] .btn.ghost{color:#0f172a}
 
-    /* HERO МОЗАИКА (21:9) */
-    .hero-mosaic{
-      position: relative;
-      width:min(1120px,92%);
-      aspect-ratio: 21 / 9;
-      border-radius:14px; overflow:hidden;
-      border:1px solid var(--border);
+    /* HERO — Ken Burns (21:9) */
+    .hero-kb{
+      position: relative; width:min(1120px,92%); aspect-ratio:21/9;
+      border-radius:14px; overflow:hidden; border:1px solid var(--border);
       margin:24px auto 0;
     }
-    .hero-mosaic::after{
+    .hero-kb::after{
       content:""; position:absolute; inset:0;
-      background:linear-gradient(to top, rgba(0,0,0,.35), transparent 40%);
-      pointer-events:none;
+      background:linear-gradient(to top, rgba(0,0,0,.35), transparent 40%); pointer-events:none;
     }
-    [data-theme="light"] .hero-mosaic::after{ background:linear-gradient(to top, rgba(0,0,0,.20), transparent 40%); }
-    .mosaic{position:absolute; inset:0; display:grid; opacity:0; transition:opacity .6s ease}
-    .mosaic.is-active{opacity:1}
-    .tile{background-color:#0f162f; background-repeat:no-repeat; transform: scale(1.08) rotate(var(--rot,0deg)); opacity:0; will-change:transform,opacity}
-    [data-theme="light"] .tile{ background-color:#f1f5f9 }
-    @keyframes tileIn{from{transform:scale(1.08) rotate(var(--rot,0deg)); opacity:0} to{transform:scale(1) rotate(0deg); opacity:1}}
-    .tile.reveal{animation: tileIn .8s var(--delay,0s) cubic-bezier(.22,.61,.36,1) forwards}
+    [data-theme="light"] .hero-kb::after{ background:linear-gradient(to top, rgba(0,0,0,.20), transparent 40%) }
+    .kb-slides{ position:absolute; inset:0 }
+    .kb-slide{
+      position:absolute; inset:0; opacity:0;
+      will-change:transform,opacity; transform:scale(1) translate(0,0);
+      transition: none;
+      animation: kbFade 12s infinite ease-in-out, kbZoom 12s infinite linear;
+    }
+    /* Порядок/смещение для 2 кадров */
+    .kb-slide:nth-child(1){ animation-delay: 0s, 0s }
+    .kb-slide:nth-child(2){ animation-delay: 6s, 6s }
+
+    .kb-slide img{ width:100%; height:100%; object-fit:cover; display:block }
+
+    /* Опасити-кроссфейд: 0–40% видим, 40–50% переход, дальше скрыт */
+    @keyframes kbFade{
+      0%, 40% { opacity:1 }
+      50%, 100% { opacity:0 }
+    }
+    /* Лёгкий зум/пан */
+    @keyframes kbZoom{
+      0%   { transform:scale(1.00) translate(0%, 0%) }
+      40%  { transform:scale(1.08) translate(-1%, 0.5%) }
+      100% { transform:scale(1.12) translate(-2%, 1%) }
+    }
+
+    /* Уважение reduced motion: показываем первый кадр без анимации */
+    @media (prefers-reduced-motion: reduce){
+      .kb-slide{ animation:none }
+      .kb-slide:nth-child(1){ opacity:1 }
+    }
 
     /* Sections */
     section{padding:64px 0}
@@ -170,7 +190,7 @@
     .cf-dots .dot{ width:8px; height:8px; border-radius:999px; border:0; background:var(--muted); opacity:.6; cursor:pointer }
     .cf-dots .dot[aria-selected="true"]{ width:26px; opacity:1; background:linear-gradient(135deg,var(--accent1),var(--accent2)) }
 
-    /* Lightbox (общий) */
+    /* Lightbox */
     .lightbox{
       position:fixed; inset:0; background:rgba(0,0,0,.85);
       display:none; align-items:center; justify-content:center; z-index:1000; padding:24px
@@ -256,12 +276,18 @@
       </div>
     </section>
 
-    <!-- HERO МОЗАИКА (21:9, 2 кадра Unsplash) -->
-    <div class="hero-mosaic" id="heroMosaic" aria-hidden="true">
-      <div class="mosaic" data-layer="0"></div>
-      <div class="mosaic" data-layer="1"></div>
+    <!-- HERO — Ken Burns -->
+    <div class="hero-kb" aria-hidden="true">
+      <div class="kb-slides">
+        <div class="kb-slide">
+          <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&h=823&q=80" alt="">
+        </div>
+        <div class="kb-slide">
+          <img src="https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1920&h=823&q=80" alt="">
+        </div>
+      </div>
       <noscript>
-        <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&h=823&q=80" alt="3D визуализация" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&h=823&q=80" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
       </noscript>
     </div>
 
@@ -419,98 +445,16 @@
       const root = document.documentElement;
       const metaTC = document.querySelector('meta[name="theme-color"]');
       const colors = { dark: '#0b1020', light: '#f8fafc' };
+
       const saved = localStorage.getItem(key);
       if(saved){ root.setAttribute('data-theme', saved); metaTC && (metaTC.content = colors[saved] || colors.dark); }
       else { root.setAttribute('data-theme', 'dark'); metaTC && (metaTC.content = colors.dark); }
+
       btn.addEventListener('click', () => {
         const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
         localStorage.setItem(key, next);
         metaTC && (metaTC.content = colors[next] || colors.dark);
-      });
-    })();
-
-    // HERO МОЗАИКА: 2 кадра Unsplash, прелоад, диагональная анимация, автосмена
-    (function(){
-      const wrap = document.getElementById('heroMosaic');
-      if(!wrap) return;
-      const layers = Array.from(wrap.querySelectorAll('.mosaic'));
-      const cols = 10, rows = 6;
-      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // Два кадра Unsplash (21:9 кроп)
-      const heroImages = [
-        'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&h=823&q=80',
-        'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1920&h=823&q=80'
-      ];
-
-      function buildLayer(el){
-        el.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        el.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-        el.innerHTML = '';
-        for(let y=0; y<rows; y++){
-          for(let x=0; x<cols; x++){
-            const t = document.createElement('div');
-            t.className = 'tile';
-            t.dataset.x = x; t.dataset.y = y;
-            t.style.backgroundPosition = `${(x/(cols-1))*100}% ${(y/(rows-1))*100}%`;
-            t.style.backgroundSize = `${cols*100}% ${rows*100}%`;
-            el.appendChild(t);
-          }
-        }
-      }
-      layers.forEach(buildLayer);
-
-      function preload(srcs){
-        return Promise.all(srcs.map(src => new Promise(res => {
-          const i = new Image();
-          i.onload = () => res(src);
-          i.onerror = () => res(null);
-          i.src = src;
-        }))).then(list => list.filter(Boolean));
-      }
-      function setLayerImage(el, url){
-        el.querySelectorAll('.tile').forEach(t=>{
-          t.style.backgroundImage = `url('${url}')`;
-        });
-      }
-      function reveal(el){
-        el.querySelectorAll('.tile').forEach(t=>{
-          const x = +t.dataset.x, y = +t.dataset.y;
-          const delay = (x + y) * 0.028 + Math.random()*0.10;
-          const rot = (Math.random()*2 - 1) * 2;
-          t.classList.remove('reveal'); void t.offsetWidth;
-          t.style.setProperty('--delay', `${delay}s`);
-          t.style.setProperty('--rot', `${rot}deg`);
-          t.classList.add('reveal');
-        });
-      }
-
-      preload(heroImages).then(imgs=>{
-        const images = imgs.length ? imgs : [heroImages[0]];
-        let idx = 0, active = 0;
-        setLayerImage(layers[active], images[idx]);
-        layers[active].classList.add('is-active');
-        reveal(layers[active]);
-
-        function next(){
-          if(images.length < 2) return;
-          idx = (idx + 1) % images.length;
-          const prev = active;
-          active = 1 - active;
-          setLayerImage(layers[active], images[idx]);
-          reveal(layers[active]);
-          layers[active].classList.add('is-active');
-          layers[prev].classList.remove('is-active');
-        }
-
-        let timer;
-        function start(){ if(reduce || images.length < 2) return; stop(); timer = setInterval(next, 5000); }
-        function stop(){ if(timer) clearInterval(timer); }
-        wrap.addEventListener('mouseenter', stop);
-        wrap.addEventListener('mouseleave', start);
-        document.addEventListener('visibilitychange', ()=> document.hidden ? stop() : start());
-        start();
       });
     })();
 
@@ -673,6 +617,6 @@
     })();
   </script>
 
-  <noscript>Похоже, у вас отключён JavaScript — для мозаики и портфолио нужен JS.</noscript>
+  <noscript>Похоже, у вас отключён JavaScript — для портфолио нужен JS. Hero показывает статичную обложку.</noscript>
 </body>
 </html>
